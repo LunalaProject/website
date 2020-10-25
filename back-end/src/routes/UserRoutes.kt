@@ -45,7 +45,7 @@ fun Route.userRoutes(userService: UserService) {
     delete<Users.Id> { (id) ->
         userService.deleteById(id)
         call.respond(HttpStatusCode.NoContent)
-    } // AH SE FODER
+    }
 }
 
 @Location("/users")
