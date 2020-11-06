@@ -1,4 +1,4 @@
-@file:OptIn(KtorExperimentalLocationsAPI::class)
+@file:OptIn(KtorExperimentalAPI::class, KtorExperimentalLocationsAPI::class)
 
 package com.gabriel.lunala.project.backend.routes
 
@@ -17,38 +17,23 @@ import io.ktor.util.pipeline.*
 const val PAGES_HEADER = "X-Total-Pages"
 
 @OptIn(KtorExperimentalAPI::class, KtorExperimentalLocationsAPI::class)
-fun Route.userRoutes(appConfig: ApplicationConfig, userService: UserService) {
+fun Route.userRoutes(config: ApplicationConfig, userService: UserService) = authenticated(config) {
     put<Users.Id> { (id) ->
-        if (authorizate(appConfig).not())
-            return@put call.respond(HttpStatusCode.Unauthorized)
-
         when(val user = userService.updateById(id, call.receive())) {
             null -> call.respond(HttpStatusCode.NotFound)
             else -> call.respond(user.toResponseDto())
         }
     }
-
     post<Users> {
-        if (authorizate(appConfig).not())
-            return@post call.respond(HttpStatusCode.Unauthorized)
-
         call.respond(HttpStatusCode.Created, userService.storeWithId(call.receive()).toResponseDto())
     }
-
     get<Users.Id> { (id) ->
-        if (authorizate(appConfig).not())
-            return@get call.respond(HttpStatusCode.Unauthorized)
-
         when (val user = userService.findById(id)) {
             null -> call.respond(HttpStatusCode.NotFound)
             else -> call.respond(user.toResponseDto())
         }
     }
-
     get<Users.Paginated> { (page) ->
-        if (authorizate(appConfig).not())
-            return@get call.respond(HttpStatusCode.Unauthorized)
-
         val (pages, items) = userService.findPaginated(page).map { user ->
             user.toResponseDto()
         }
@@ -56,16 +41,23 @@ fun Route.userRoutes(appConfig: ApplicationConfig, userService: UserService) {
         call.response.headers.append(PAGES_HEADER, pages.toString())
         call.respond(items)
     }
-
     delete<Users.Id> { (id) ->
-        if (authorizate(appConfig).not())
-            return@delete call.respond(HttpStatusCode.Unauthorized)
-
         userService.deleteById(id)
         call.respond(HttpStatusCode.NoContent)
     }
-
 }
+
+@OptIn(KtorExperimentalAPI::class)
+fun Route.authenticated(config: ApplicationConfig, route: Route.() -> Unit): Route {
+    intercept(ApplicationCallPipeline.Features) {
+        validate(config, call.request.authorization().orEmpty())
+    }
+    return apply(route)
+}
+
+@OptIn(KtorExperimentalAPI::class)
+private suspend fun PipelineContext<Unit, ApplicationCall>.validate(config: ApplicationConfig, value: String) = if (config.property("key").getList().contains(value).not())
+    call.respond(HttpStatusCode.Unauthorized) else Unit
 
 @OptIn(KtorExperimentalAPI::class)
 fun PipelineContext<Unit, ApplicationCall>.authorizate(config: ApplicationConfig): Boolean =
