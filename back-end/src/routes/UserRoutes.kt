@@ -50,14 +50,16 @@ fun Route.userRoutes(config: ApplicationConfig, userService: UserService) = auth
 @OptIn(KtorExperimentalAPI::class)
 fun Route.authenticated(config: ApplicationConfig, route: Route.() -> Unit): Route {
     intercept(ApplicationCallPipeline.Features) {
-        validate(config, call.request.authorization().orEmpty())
+        validate(config, call.request.authorization().orEmpty()) {
+            finish()
+        }
     }
     return apply(route)
 }
 
 @OptIn(KtorExperimentalAPI::class)
-private suspend fun PipelineContext<Unit, ApplicationCall>.validate(config: ApplicationConfig, value: String) = if (config.property("keys").getList().contains(value).not())
-    call.respond(HttpStatusCode.Unauthorized) else Unit
+private suspend fun PipelineContext<Unit, ApplicationCall>.validate(config: ApplicationConfig, value: String, callback: (String) -> Unit) = if (config.property("keys").getList().contains(value).not())
+    call.respond(HttpStatusCode.Unauthorized).also { callback(value) } else Unit
 
 @Location("/api/users")
 class Users {
