@@ -56,14 +56,10 @@ fun Route.authenticated(config: ApplicationConfig, route: Route.() -> Unit): Rou
 }
 
 @OptIn(KtorExperimentalAPI::class)
-private suspend fun PipelineContext<Unit, ApplicationCall>.validate(config: ApplicationConfig, value: String) = if (config.property("key").getList().contains(value).not())
+private suspend fun PipelineContext<Unit, ApplicationCall>.validate(config: ApplicationConfig, value: String) = if (config.property("keys").getList().contains(value).not())
     call.respond(HttpStatusCode.Unauthorized) else Unit
 
-@OptIn(KtorExperimentalAPI::class)
-fun PipelineContext<Unit, ApplicationCall>.authorizate(config: ApplicationConfig): Boolean =
-    config.property("keys").getList().contains(call.request.authorization())
-
-@Location("/users")
+@Location("/api/users")
 class Users {
 
     @Location("/")
