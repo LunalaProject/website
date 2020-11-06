@@ -53,11 +53,10 @@ fun Application.module() {
     val userService = UserService()
 
     authentication {
-
     }
 
     routing {
-        userRoutes(userService)
+        userRoutes(environment.config, userService)
     }
 }
 
