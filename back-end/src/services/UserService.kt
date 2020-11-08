@@ -1,11 +1,8 @@
 package com.gabriel.lunala.project.backend.services
 
-import com.gabriel.lunala.project.backend.database.tables.UserTable
 import com.gabriel.lunala.project.backend.entities.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import kotlin.math.ceil
-
-const val PAGE_SIZE = 20
 
 class UserService {
 
@@ -31,7 +28,7 @@ class UserService {
         val page = if (page <= 0) 1 else page
         val allUsers = User.all()
 
-        allUsers.paginate(page, PAGE_SIZE).asPage(ceil((allUsers.count() / PAGE_SIZE + 1).toDouble()))
+        allUsers.paginate(page, DEFAULT_PAGE_SIZE).asPage(ceil((allUsers.count() / DEFAULT_PAGE_SIZE + 1).toDouble()))
     }
 
     suspend fun deleteById(id: Long) = newSuspendedTransaction {

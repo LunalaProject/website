@@ -4,6 +4,8 @@ package com.gabriel.lunala.project.backend
 
 import com.gabriel.lunala.project.backend.routes.userRoutes
 import com.gabriel.lunala.project.backend.database.DatabaseService
+import com.gabriel.lunala.project.backend.routes.guildRoutes
+import com.gabriel.lunala.project.backend.services.GuildService
 import com.gabriel.lunala.project.backend.services.UserService
 import io.ktor.application.*
 import io.ktor.request.*
@@ -51,12 +53,14 @@ fun Application.module() {
     }
 
     val userService = UserService()
+    val guildService = GuildService()
 
     authentication {
     }
 
     routing {
         userRoutes(environment.config, userService)
+        guildRoutes(environment.config, guildService)
     }
 }
 

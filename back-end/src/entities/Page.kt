@@ -3,6 +3,8 @@ package com.gabriel.lunala.project.backend.entities
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.SizedIterable
 
+const val DEFAULT_PAGE_SIZE = 100
+
 @Serializable
 data class Page<T>(
     val pages: Int,
