@@ -43,5 +43,4 @@ class UserService {
     suspend fun deleteById(id: Long) = newSuspendedTransaction {
         findById(id)?.delete()
     }
-
 }

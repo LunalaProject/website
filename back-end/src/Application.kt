@@ -4,8 +4,10 @@ package com.gabriel.lunala.project.backend
 
 import com.gabriel.lunala.project.backend.database.DatabaseService
 import com.gabriel.lunala.project.backend.routes.guildRoutes
+import com.gabriel.lunala.project.backend.routes.planetRoutes
 import com.gabriel.lunala.project.backend.routes.userRoutes
 import com.gabriel.lunala.project.backend.services.GuildService
+import com.gabriel.lunala.project.backend.services.PlanetService
 import com.gabriel.lunala.project.backend.services.UserService
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -53,6 +55,7 @@ fun Application.module() {
 
     val userService = UserService()
     val guildService = GuildService()
+    val planetService = PlanetService()
 
     authentication {
     }
@@ -60,6 +63,7 @@ fun Application.module() {
     routing {
         userRoutes(environment.config, userService)
         guildRoutes(environment.config, guildService)
+        planetRoutes(environment.config, planetService)
     }
 }
 
