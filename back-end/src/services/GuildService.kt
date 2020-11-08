@@ -1,19 +1,23 @@
 package com.gabriel.lunala.project.backend.services
 
-import com.gabriel.lunala.project.backend.entities.*
+import com.gabriel.lunala.project.backend.entities.Guild
+import com.gabriel.lunala.project.backend.entities.GuildCreateDTO
+import com.gabriel.lunala.project.backend.entities.GuildUpdateDTO
+import com.gabriel.lunala.project.backend.entities.findEntitiesByPage
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import kotlin.math.ceil
 
 class GuildService {
 
     suspend fun storeWithId(create: GuildCreateDTO): Guild = newSuspendedTransaction {
         Guild.findById(create.id) ?: Guild.new(create.id) {
+            locale = create.locale
             partner = create.partner
         }
     }
 
     suspend fun updateById(id: Long, update: GuildUpdateDTO) = newSuspendedTransaction {
         findById(id)?.apply {
+            locale = update.locale ?: locale
             partner = update.partner ?: partner
         }
     }
@@ -23,10 +27,7 @@ class GuildService {
     }
 
     suspend fun findPaginated(page: Int) = newSuspendedTransaction {
-        val page = if (page <= 0) 1 else page
-        val allGuilds = Guild.all()
-
-        allGuilds.paginate(page, DEFAULT_PAGE_SIZE).asPage(ceil((allGuilds.count() / DEFAULT_PAGE_SIZE + 1).toDouble()))
+        findEntitiesByPage(Guild.all(), page)
     }
 
     suspend fun deleteById(id: Long) = newSuspendedTransaction {

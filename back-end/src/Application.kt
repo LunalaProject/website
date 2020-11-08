@@ -2,22 +2,21 @@
 
 package com.gabriel.lunala.project.backend
 
-import com.gabriel.lunala.project.backend.routes.userRoutes
 import com.gabriel.lunala.project.backend.database.DatabaseService
 import com.gabriel.lunala.project.backend.routes.guildRoutes
+import com.gabriel.lunala.project.backend.routes.userRoutes
 import com.gabriel.lunala.project.backend.services.GuildService
 import com.gabriel.lunala.project.backend.services.UserService
 import io.ktor.application.*
-import io.ktor.request.*
+import io.ktor.auth.*
+import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.locations.*
-import io.ktor.features.*
-import org.slf4j.event.*
-import io.ktor.auth.*
+import io.ktor.request.*
 import io.ktor.routing.*
-
 import io.ktor.serialization.*
 import io.ktor.util.*
+import org.slf4j.event.Level
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 

@@ -1,5 +1,6 @@
 package com.gabriel.lunala.project.backend.database
 
+import com.gabriel.lunala.project.backend.database.tables.GuildTable
 import com.gabriel.lunala.project.backend.database.tables.UserTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -23,7 +24,7 @@ class DatabaseService(val config: ApplicationConfig) {
     }
 
     fun createTables() = transaction {
-        SchemaUtils.createMissingTablesAndColumns(UserTable)
+        SchemaUtils.createMissingTablesAndColumns(UserTable, GuildTable)
     }
 
     private fun value(name: String) = config.property(name).getString()

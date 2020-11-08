@@ -10,18 +10,49 @@ class User(id: EntityID<Long>): LongEntity(id) {
 
     companion object: LongEntityClass<User>(UserTable)
 
-    var coins by UserTable.coins
-    var planet by UserTable.planet
+    var ship: Int by UserTable.ship
+    var coins: Long by UserTable.coins
+    var equipment: Int by UserTable.equipment
+    var crew: Int by UserTable.crew
+    var planet: String by UserTable.planet
+    var galaxy: String by UserTable.galaxy
+    var premium: Int by UserTable.premium
 
-    fun toResponseDto() = UserResponseDTO(id.value, coins, planet)
+    fun toResponseDto() = UserResponseDTO(id.value, ship, coins, equipment, crew, planet, galaxy, premium)
 
 }
 
 @Serializable
-data class UserCreateDTO(val id: Long, val coins: Long, val planet: String)
+data class UserCreateDTO(
+    val id: Long,
+    val ship: Int,
+    val coins: Long,
+    val equipment: Int,
+    val crew: Int,
+    val planet: String,
+    val galaxy: String,
+    val premium: Int
+)
 
 @Serializable
-data class UserUpdateDTO(val coins: Long?, val planet: String?)
+data class UserUpdateDTO(
+    val ship: Int? = null,
+    val coins: Long? = null,
+    val equipment: Int? = null,
+    val crew: Int? = null,
+    val planet: String? = null,
+    val galaxy: String? = null,
+    val premium: Int? = null
+)
 
 @Serializable
-data class UserResponseDTO(val id: Long, val coins: Long, val planet: String)
+data class UserResponseDTO(
+    val id: Long,
+    val ship: Int,
+    val coins: Long,
+    val equipment: Int,
+    val crew: Int,
+    val planet: String,
+    val galaxy: String,
+    val premium: Int
+)

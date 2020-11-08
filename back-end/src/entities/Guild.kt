@@ -10,17 +10,29 @@ class Guild(id: EntityID<Long>): LongEntity(id) {
 
     companion object: LongEntityClass<Guild>(GuildTable)
 
+    var locale by GuildTable.locale
     var partner by GuildTable.partner
 
-    fun toResponseDto() = GuildResponseDTO(id.value, partner)
+    fun toResponseDto() = GuildResponseDTO(id.value, locale, partner)
 
 }
 
 @Serializable
-data class GuildCreateDTO(val id: Long, val partner: Boolean)
+data class GuildCreateDTO(
+    val id: Long,
+    val locale: String,
+    val partner: Boolean
+)
 
 @Serializable
-data class GuildUpdateDTO(val partner: Boolean?)
+data class GuildUpdateDTO(
+    val locale: String? = null,
+    val partner: Boolean? = null
+)
 
 @Serializable
-data class GuildResponseDTO(val id: Long, val partner: Boolean)
+data class GuildResponseDTO(
+    val id: Long,
+    val locale: String,
+    val partner: Boolean
+)
