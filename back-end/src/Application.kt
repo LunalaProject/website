@@ -3,9 +3,11 @@
 package com.gabriel.lunala.project.backend
 
 import com.gabriel.lunala.project.backend.database.DatabaseService
+import com.gabriel.lunala.project.backend.routes.galaxyRoutes
 import com.gabriel.lunala.project.backend.routes.guildRoutes
 import com.gabriel.lunala.project.backend.routes.planetRoutes
 import com.gabriel.lunala.project.backend.routes.userRoutes
+import com.gabriel.lunala.project.backend.services.GalaxyService
 import com.gabriel.lunala.project.backend.services.GuildService
 import com.gabriel.lunala.project.backend.services.PlanetService
 import com.gabriel.lunala.project.backend.services.UserService
@@ -56,6 +58,7 @@ fun Application.module() {
     val userService = UserService()
     val guildService = GuildService()
     val planetService = PlanetService()
+    val galaxyService = GalaxyService()
 
     authentication {
     }
@@ -64,6 +67,7 @@ fun Application.module() {
         userRoutes(environment.config, userService)
         guildRoutes(environment.config, guildService)
         planetRoutes(environment.config, planetService)
+        galaxyRoutes(environment.config, galaxyService)
     }
 }
 
